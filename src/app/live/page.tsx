@@ -4,19 +4,19 @@ const page = () => {
   return (
     <div className="min-h-screen bg-background text-foreground p-8">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold mb-8">Welcome to Your Next.js App</h1>
+        <h1 className="text-4xl font-bold mb-8">Live Page</h1>
         <p className="text-lg mb-4">
-          NextTopLoader is now configured! Navigate between pages to see the loading progress bar.
+          This is the live page. You should have seen the TopLoader animation when navigating here!
         </p>
         <div className="space-y-4">
           <Link 
-            href="/live" 
-            className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-colors"
+            href="/" 
+            className="inline-block bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg transition-colors"
           >
-            Go to Live Page
+            Back to Home
           </Link>
           <p className="text-sm text-muted-foreground">
-            Click the link above to test the TopLoader animation
+            Navigate back to see the TopLoader in action again
           </p>
         </div>
       </div>
