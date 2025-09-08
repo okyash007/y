@@ -1,14 +1,10 @@
-"use client"
+"use server"
 
-import dynamic from 'next/dynamic'
-
-const BlogEditor = dynamic(() => import('./Client'), {
-  ssr: false
-})
+import Client from "./Client"
 
 const page = () => {
   return (
-    <BlogEditor />
+    <Client />
   )
 }
 

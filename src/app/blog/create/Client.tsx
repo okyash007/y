@@ -1,91 +1,64 @@
 "use client";
 
-import { useCreateBlockNote } from "@blocknote/react";
-import { BlockNoteView } from "@blocknote/mantine";
-import { useTheme } from "next-themes";
-import "@blocknote/mantine/style.css";
-import "@blocknote/core/fonts/inter.css";
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import dynamic from "next/dynamic";
+import { Skeleton } from "@/components/ui/skeleton";
 
-export default function MyEditor() {
-  const { theme } = useTheme();
+const BlockEditor = dynamic(() => import("./BlockEditor"), {
+  ssr: false,
+  loading: () => (
+    <div className="px-[54px]">
+      <Skeleton className="w-full h-[500px] rounded-lg" />
+    </div>
+  ),
+});
 
-  const editor = useCreateBlockNote();
-
-  // Helper function to save JSON content to localStorage
-
-  async function getFullHTML() {
-    const content = editor.document;
-    const html = await editor.blocksToFullHTML(content);
-    console.log(html);
-    return html;
-  }
-
-  const saveContent = () => {
-    if (!editor) return;
+const Client = () => {
+  // Example initial HTML content - you can replace this with content from your database/API
+  const [initialHTML] = useState(`
+    <h1>Welcome to My Blog Editor</h1>
+    <p>This content was loaded from HTML! You can initialize the editor with any HTML content.</p>
     
-    const content = editor.document;
+    <h2>Supported HTML Elements:</h2>
+    <ul>
+      <li><strong>Headers</strong> (h1, h2, h3, etc.)</li>
+      <li><em>Paragraphs</em> with formatting</li>
+      <li>Lists (ordered and unordered)</li>
+      <li>Links and other inline elements</li>
+    </ul>
     
-    console.log(
-      "💾 Content to save in localStorage:",
-      JSON.stringify(content, null, 2)
-    );
+    <h3>How to use:</h3>
+    <ol>
+      <li>Pass your HTML string to the <code>initialContent</code> prop</li>
+      <li>The editor will automatically parse and render it</li>
+      <li>Users can then edit the content normally</li>
+      <li>Use the <code>onChange</code> callback to capture changes</li>
+    </ol>
+    
+    <p>Try editing this content - all changes will be logged to the console!</p>
+  `);
 
-    // Save content to localStorage
-    try {
-      localStorage.setItem('blog-content', JSON.stringify(content));
-      console.log("✅ Content saved to localStorage successfully!");
-    } catch (error) {
-      console.error("❌ Failed to save to localStorage:", error);
-    }
+  const handleContentChange = (content: string) => {
+    console.log("Content changed:", content);
   };
 
   return (
     <>
-      <div className="flex justify-end items-center mb-4">
-        <Button onClick={saveContent}>
-          Save to localStorage
-        </Button>
-        <Button onClick={getFullHTML}>
-          get full html
-        </Button>
-      </div>
-
-      <div className="w-full min-h-[500px] bg-background text-foreground rounded-lg editor-container">
-        <BlockNoteView
-          editor={editor}
-          theme={theme === "dark" ? "dark" : "light"}
-          className="bg-background text-foreground"
+      <div className="sticky top-16 mx-[42px] p-4 z-10 rounded-lg bg-card shadow-md">
+        <input
+          type="text"
+          className="focus:outline-none text-4xl font-bold"
+          placeholder="Title"
         />
-        <style jsx>{`
-        .editor-container :global(.bn-editor) {
-          background-color: hsl(var(--background)) !important;
-          color: hsl(var(--foreground)) !important;
-        }
-
-        .editor-container :global(.bn-block-outer) {
-          background-color: hsl(var(--background)) !important;
-        }
-
-        .editor-container :global(.bn-block-content) {
-          color: hsl(var(--foreground)) !important;
-        }
-
-        .editor-container :global(.mantine-Paper-root) {
-          background-color: hsl(var(--background)) !important;
-          color: hsl(var(--foreground)) !important;
-        }
-
-        .editor-container :global(.bn-editor .ProseMirror) {
-          background-color: hsl(var(--background)) !important;
-          color: hsl(var(--foreground)) !important;
-        }
-
-        .editor-container :global(.bn-editor .ProseMirror p) {
-          color: hsl(var(--foreground)) !important;
-        }
-       `}</style>
+      </div>
+      <div className="mt-4">
+        <BlockEditor
+          initialContent={initialHTML}
+          onChange={handleContentChange}
+        />
       </div>
     </>
   );
-}
+};
+
+export default Client;

@@ -1,0 +1,39 @@
+/* BlockNote Theme Override */
+/* Override both background and text colors to match your app's theme */
+
+/* Light theme */
+.bn-theme-adaptive,
+.bn-container[data-color-scheme="light"] {
+  --bn-colors-editor-background: oklch(1 0 0); /* --background */
+  --bn-colors-editor-text: oklch(0.145 0 0); /* --foreground */
+  --bn-colors-default-text: oklch(0.145 0 0); /* --foreground */
+}
+
+/* Dark theme */
+.dark .bn-theme-adaptive,
+.bn-theme-adaptive.dark,
+.bn-container[data-color-scheme="dark"] {
+  --bn-colors-editor-background: oklch(0.145 0 0); /* dark --background */
+  --bn-colors-editor-text: oklch(0.985 0 0); /* dark --foreground */
+  --bn-colors-default-text: oklch(0.985 0 0); /* dark --foreground */
+}
+
+/* Ensure all text elements inherit proper colors */
+.bn-theme-adaptive .ProseMirror,
+.bn-theme-adaptive .bn-inline-content,
+.bn-theme-adaptive .bn-block-content {
+  color: var(--bn-colors-editor-text) !important;
+}
+
+/* Fix specific BlockNote elements */
+.bn-theme-adaptive h1,
+.bn-theme-adaptive h2,
+.bn-theme-adaptive h3,
+.bn-theme-adaptive h4,
+.bn-theme-adaptive h5,
+.bn-theme-adaptive h6,
+.bn-theme-adaptive p,
+.bn-theme-adaptive li,
+.bn-theme-adaptive span {
+  color: inherit !important;
+}
