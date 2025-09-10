@@ -11,7 +11,7 @@ const Auth = () => {
 
   async function handleAuth() {
     const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/device`);
-    return response;
+    return response.data.data;
   }
 
   useEffect(() => {
