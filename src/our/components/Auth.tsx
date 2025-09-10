@@ -4,14 +4,14 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useEffect, useState } from "react";
 import { HiMiniQuestionMarkCircle } from "react-icons/hi2";
+import axios from "axios";
 
 const Auth = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   async function handleAuth() {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/device`);
-    const data = await response.json();
-    return data.data;
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/device`);
+    return response.data.data;
   }
 
   useEffect(() => {
