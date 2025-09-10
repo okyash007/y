@@ -10,8 +10,8 @@ const Auth = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   async function handleAuth() {
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/device`);
-    return response.data.data;
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/health`);
+    return response;
   }
 
   useEffect(() => {
