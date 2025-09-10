@@ -7,7 +7,7 @@ import { HiMiniQuestionMarkCircle } from "react-icons/hi2";
 import axios from "axios";
 
 const Auth = () => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   async function handleAuth() {
     const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/device`);
