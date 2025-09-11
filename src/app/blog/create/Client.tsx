@@ -7,7 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 const BlockEditor = dynamic(() => import("./BlockEditor"), {
   ssr: false,
   loading: () => (
-    <div className="px-[54px]">
+    <div className="mx-[42px]">
       <Skeleton className="w-full h-[500px] rounded-lg" />
     </div>
   ),
@@ -44,7 +44,7 @@ const Client = () => {
 
   return (
     <>
-      <div className="sticky top-16 mx-[42px] p-4 z-10 rounded-lg bg-card shadow-md">
+      <div className="sticky top-16 mx-[42px] p-4 z-10 rounded-lg bg-secondary">
         <input
           type="text"
           className="focus:outline-none text-4xl font-bold"
