@@ -14,6 +14,8 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import axios from "axios";
+import { useAppStore } from "@/lib/store";
 
 interface FormData {
   name: string;
@@ -28,9 +30,18 @@ interface FormErrors {
 }
 
 const Identify = () => {
+  const { device, setDevice } = useAppStore();
   const searchParams = useSearchParams();
   const isIdentifyModal = searchParams.get("identify_modal") === "true";
   const [isDialogOpen, setIsDialogOpen] = useState(isIdentifyModal ? true : false);
+
+  async function handleIdentify() {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/user/identify`, formData);
+    if (response.data?.success) {
+      return response.data?.data;
+    }
+    return null;
+  }
 
   // Form state
   const [formData, setFormData] = useState<FormData>({
@@ -143,18 +154,26 @@ const Identify = () => {
     setIsSubmitting(true);
     
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Call the identify API
+      const data = await handleIdentify();
       
-      // Handle successful submission
-      console.log('Form submitted:', formData);
-      setIsDialogOpen(false);
-      
-      // Reset form
-      setFormData({ name: "", email: "", password: "" });
-      setErrors({});
+      if (data) {
+        setDevice(data);
+        
+        // Handle successful submission
+        setIsDialogOpen(false);
+        
+        // Reset form
+        setFormData({ name: "", email: "", password: "" });
+        setErrors({});
+      } else {
+        // Handle API failure
+        console.error('Identity verification failed');
+        // You might want to show an error message to the user here
+      }
     } catch (error) {
       console.error('Submission error:', error);
+      // You might want to show an error message to the user here
     } finally {
       setIsSubmitting(false);
     }
@@ -167,73 +186,135 @@ const Identify = () => {
           <HiMiniQuestionMarkCircle className="!size-6" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <form onSubmit={handleSubmit}>
-          <DialogHeader>
-            <DialogTitle>Identify Yourself...</DialogTitle>
-            <DialogDescription>
-              Identify yourself to continue. Click save when you&apos;re
-              done.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-3">
-              <Label htmlFor="name-1">Name</Label>
-              <Input
-                id="name-1"
-                name="name"
-                placeholder="Name"
-                value={formData.name}
-                onChange={(e) => handleInputChange('name', e.target.value)}
-                onBlur={() => handleFieldBlur('name')}
-                className={errors.name ? "border-red-500 focus-visible:ring-red-500" : ""}
-              />
-              {errors.name && (
-                <p className="text-sm text-red-600">{errors.name}</p>
-              )}
+      <DialogContent className="sm:max-w-[480px] p-0">
+        <div className="bg-gradient-to-br from-background to-secondary/20 p-8">
+          <form onSubmit={handleSubmit}>
+            <DialogHeader className="space-y-4 text-center">
+              <div className="mx-auto w-16 h-16 bg-gradient-to-br from-primary/20 to-primary/10 rounded-full flex items-center justify-center">
+                <HiMiniQuestionMarkCircle className="size-8 text-primary" />
+              </div>
+              <div className="space-y-2">
+                <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
+                  Identify Yourself
+                </DialogTitle>
+                <DialogDescription className="text-base text-muted-foreground/80 max-w-sm leading-relaxed">
+                  Create your account to access all features and personalize your experience.
+                </DialogDescription>
+              </div>
+            </DialogHeader>
+            <div className="space-y-6 py-8">
+              <div className="space-y-3">
+                <Label htmlFor="name-1" className="text-sm font-medium text-foreground flex items-center gap-2">
+                  <span className="w-2 h-2 bg-primary rounded-full"></span>
+                  Full Name
+                </Label>
+                <Input
+                  id="name-1"
+                  name="name"
+                  placeholder="Enter your full name"
+                  value={formData.name}
+                  onChange={(e) => handleInputChange('name', e.target.value)}
+                  onBlur={() => handleFieldBlur('name')}
+                  className={`h-12 bg-background/50 border-border/50 focus:border-primary focus:ring-primary/20 transition-all duration-200 ${errors.name ? "border-red-500 focus-visible:ring-red-500" : ""}`}
+                />
+                {errors.name && (
+                  <p className="text-sm text-red-500 flex items-center gap-1">
+                    <span className="w-1 h-1 bg-red-500 rounded-full"></span>
+                    {errors.name}
+                  </p>
+                )}
+              </div>
+              
+              <div className="space-y-3">
+                <Label htmlFor="email-1" className="text-sm font-medium text-foreground flex items-center gap-2">
+                  <span className="w-2 h-2 bg-primary rounded-full"></span>
+                  Email Address
+                </Label>
+                <Input
+                  id="email-1"
+                  name="email"
+                  type="email"
+                  placeholder="Enter your email address"
+                  value={formData.email}
+                  onChange={(e) => handleInputChange('email', e.target.value)}
+                  onBlur={() => handleFieldBlur('email')}
+                  className={`h-12 bg-background/50 border-border/50 focus:border-primary focus:ring-primary/20 transition-all duration-200 ${errors.email ? "border-red-500 focus-visible:ring-red-500" : ""}`}
+                />
+                {errors.email && (
+                  <p className="text-sm text-red-500 flex items-center gap-1">
+                    <span className="w-1 h-1 bg-red-500 rounded-full"></span>
+                    {errors.email}
+                  </p>
+                )}
+              </div>
+              
+              <div className="space-y-3">
+                <Label htmlFor="password-1" className="text-sm font-medium text-foreground flex items-center gap-2">
+                  <span className="w-2 h-2 bg-primary rounded-full"></span>
+                  Password
+                </Label>
+                <Input
+                  id="password-1"
+                  type="password"
+                  name="password"
+                  placeholder="Create a secure password"
+                  value={formData.password}
+                  onChange={(e) => handleInputChange('password', e.target.value)}
+                  onBlur={() => handleFieldBlur('password')}
+                  className={`h-12 bg-background/50 border-border/50 focus:border-primary focus:ring-primary/20 transition-all duration-200 ${errors.password ? "border-red-500 focus-visible:ring-red-500" : ""}`}
+                />
+                {errors.password && (
+                  <p className="text-sm text-red-500 flex items-center gap-1">
+                    <span className="w-1 h-1 bg-red-500 rounded-full"></span>
+                    {errors.password}
+                  </p>
+                )}
+                <div className="text-xs text-muted-foreground/70 space-y-1">
+                  <p>Password must contain:</p>
+                  <ul className="ml-4 space-y-0.5">
+                    <li className="flex items-center gap-1">
+                      <span className="w-1 h-1 bg-muted-foreground/50 rounded-full"></span>
+                      At least 8 characters
+                    </li>
+                    <li className="flex items-center gap-1">
+                      <span className="w-1 h-1 bg-muted-foreground/50 rounded-full"></span>
+                      Upper & lowercase letters
+                    </li>
+                    <li className="flex items-center gap-1">
+                      <span className="w-1 h-1 bg-muted-foreground/50 rounded-full"></span>
+                      Numbers & special characters
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </div>
-            <div className="grid gap-3">
-              <Label htmlFor="email-1">Email</Label>
-              <Input
-                id="email-1"
-                name="email"
-                type="email"
-                placeholder="Email"
-                value={formData.email}
-                onChange={(e) => handleInputChange('email', e.target.value)}
-                onBlur={() => handleFieldBlur('email')}
-                className={errors.email ? "border-red-500 focus-visible:ring-red-500" : ""}
-              />
-              {errors.email && (
-                <p className="text-sm text-red-600">{errors.email}</p>
-              )}
-            </div>
-            <div className="grid gap-3">
-              <Label htmlFor="password-1">Password</Label>
-              <Input
-                id="password-1"
-                type="password"
-                name="password"
-                placeholder="Password"
-                value={formData.password}
-                onChange={(e) => handleInputChange('password', e.target.value)}
-                onBlur={() => handleFieldBlur('password')}
-                className={errors.password ? "border-red-500 focus-visible:ring-red-500" : ""}
-              />
-              {errors.password && (
-                <p className="text-sm text-red-600">{errors.password}</p>
-              )}
-            </div>
-          </div>
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline" disabled={isSubmitting}>Cancel</Button>
-            </DialogClose>
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "Saving..." : "Save changes"}
-            </Button>
-          </DialogFooter>
-        </form>
+            <DialogFooter className="flex-col sm:flex-row gap-3 pt-6 border-t border-border/20">
+              <DialogClose asChild>
+                <Button 
+                  variant="outline" 
+                  disabled={isSubmitting}
+                  className="h-11 border-border/50 hover:border-border hover:bg-secondary/50 transition-all duration-200"
+                >
+                  Cancel
+                </Button>
+              </DialogClose>
+              <Button 
+                type="submit" 
+                disabled={isSubmitting}
+                className="h-11 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary/80 text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-200 flex-1 sm:flex-initial"
+              >
+                {isSubmitting ? (
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin"></div>
+                    Identifying...
+                  </div>
+                ) : (
+                  "Identify"
+                )}
+              </Button>
+            </DialogFooter>
+          </form>
+        </div>
       </DialogContent>
     </Dialog>
   );
