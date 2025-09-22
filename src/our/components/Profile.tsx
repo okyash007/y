@@ -174,7 +174,7 @@ const Profile = () => {
           align="center"
           className="w-[350px] mx-4 mt-2"
         >
-          <div className="p-6 space-y-6">
+          <div className="p-3 space-y-6">
             <div>
               <ProfileCard user={user || null} />
             </div>
