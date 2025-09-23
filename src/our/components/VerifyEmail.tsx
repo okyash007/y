@@ -81,7 +81,7 @@ const VerifyEmail = ({
             Verify Your Email
           </DialogTitle>
           <DialogDescription className="text-sm text-muted-foreground leading-relaxed">
-            We've sent a 6-digit verification code to{" "}
+            We&apos;ve sent a 6-digit verification code to{" "}
             <span className="font-medium text-foreground">
               {userEmail ? maskEmail(userEmail) : "your email"}
             </span>
@@ -131,7 +131,7 @@ const VerifyEmail = ({
             </Button>
             
             <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-              <span>Didn't receive the code?</span>
+              <span>Didn&apos;t receive the code?</span>
               <Button
                 variant="link"
                 onClick={handleResend}
@@ -154,7 +154,7 @@ const VerifyEmail = ({
 
           {/* Help Text */}
           <div className="text-xs text-muted-foreground/70 text-center space-y-1">
-            <p>Check your spam folder if you don't see the email.</p>
+            <p>Check your spam folder if you don&apos;t see the email.</p>
             <p>The code will expire in 10 minutes.</p>
           </div>
         </div>
