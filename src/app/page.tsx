@@ -1,24 +1,16 @@
-import Link from "next/link";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const page = () => {
   return (
-    <div className="min-h-screen bg-background text-foreground p-8">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold mb-8">Welcome to Your Next.js App</h1>
-        <p className="text-lg mb-4">
-          NextTopLoader is now configured! Navigate between pages to see the loading progress bar.
-        </p>
-        <div className="space-y-4">
-          <Link 
-            href="/live" 
-            className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-colors"
-          >
-            Go to Live Page
-          </Link>
-          <p className="text-sm text-muted-foreground">
-            Click the link above to test the TopLoader animation
-          </p>
-        </div>
+    <div className="max-w-4xl mx-auto">
+      <div>
+        <Avatar className="size-12">
+          <AvatarImage
+            className="object-cover"
+            src="https://res.cloudinary.com/dspp405ug/image/upload/q_auto,f_auto,w_auto/v1758616681/IMG_1592_fops9k.png"
+          />
+          <AvatarFallback>Y</AvatarFallback>
+        </Avatar>
       </div>
     </div>
   );
