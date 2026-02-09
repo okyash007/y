@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Urbanist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import Navbar from "@/our/components/Navbar";
@@ -16,9 +17,16 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const brunelis = localFont({
+  src: "./fonts/brunelis-noctelle.otf",
+  variable: "--font-brunelis",
+  weight: "400",
+});
+
 export const metadata: Metadata = {
   title: "Yash Verma - Full Stack Developer & UI/UX Enthusiast",
-  description: "Portfolio of Yash Verma - Full Stack Developer specializing in React, Next.js, and modern web technologies. Creating beautiful, functional web experiences.",
+  description:
+    "Portfolio of Yash Verma - Full Stack Developer specializing in React, Next.js, and modern web technologies. Creating beautiful, functional web experiences.",
 };
 
 export default function RootLayout({
@@ -28,7 +36,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${urbanist.variable} ${geistMono.variable}`}>
+      <body
+        className={`${urbanist.variable} ${geistMono.variable} ${brunelis.variable}`}
+      >
         <NextTopLoader {...topLoaderConfig} />
         <ThemeProvider
           attribute="class"
